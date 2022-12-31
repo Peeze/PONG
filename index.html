@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+
+<!--PONG, the game. A simple implementation.
+
+    (c) Peeze, December 2022
+    https://github.com/Peeze
+
+    Released under the Mozilla Public License Version 2.0
+    https://www.mozilla.org/en-US/MPL/2.0/
+-->
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>PONG!</title>
+
+    <style>
+        * { padding: 0; margin: 0; }
+
+        body {
+            background-color: #000000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 98%;
+            height: 99%;
+            background-color: #000000; /*#123456;*/
+            color: #ffffff;
+            /*font-size: 50px;*/
+            font-family: monospace;
+        }
+
+        .pongBar {
+            position: absolute;
+            background-color: #ffffff;
+        }
+
+        .pongBall {
+            position: absolute;
+            background-color: #ffffff;
+        }
+
+        .pongScoreContainer {
+            position: absolute;
+            top: 2%;
+            left: 50%;
+            transform: translate(-50%, 0%);
+            /*color: #ffffff;
+            font-size: 50px;
+            font-family: monospace;*/
+        }
+
+        @keyframes blinking {
+            0% {
+                opacity: 100%;
+            }
+            60% {
+                opacity: 70%;
+            }
+            100% {
+                opacity: 100%;
+            }
+        }
+        .pongMessageContainer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            /*color: #ffffff;
+            font-size: 50px;
+            font-family: monospace;*/
+            animation: blinking 1.5s infinite;
+        }
+
+        .imprint {
+            position: absolute;
+            top: 100%;
+            left: 0%;
+            transform: translate(0%, -100%);
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 10px;
+        }
+
+        #pongCanvas {
+            position: relative;
+            width: 100%; height: 100%;
+            background-color: #ec5623;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="pongContainer">
+        <a class="imprint" href="https://github.com/Peeze" target="_blank" rel="noopener noreferrer">
+            (c) Peeze 2022
+        </a>
+    </div>
+
+    <script src="pong.js"></script>
+</body>
+</html>
