@@ -11,12 +11,17 @@ function randomSign() {
     return Math.pow(-1, Math.floor(2 * Math.random()));
 }
 
-function playSound(audioFile, loopAudio=false) {
+function playSound(audioFile, loopAudio=false, autoStart=true) {
     if (audioFile) {
-        console.log(audioFile);
+        console.debug("Loading", audioFile);
+
         let audio = new Audio(audioFile);
         audio.loop = loopAudio;
-        audio.play();
+        if (autoStart) {
+            audio.play();
+        }
+
+        return audio;
     }
 }
 
@@ -34,27 +39,50 @@ function drawScore() {
     scoreBoard.innerHTML = padLeft + scoreLeft + " : " + scoreRight + padRight;
 }
 
-function gamePause(e) {
-    // During start routine, start by pressing any key
+function pauseGame() {
+    gamePaused = !gamePaused;
+
+    if (gamePaused) {
+        messageContainer.innerHTML = "Paused"; //\u258B\u258B";
+        audioAtmo_.pause();  // Don't play music during pause
+
+    } else {
+        messageContainer.innerHTML = "";
+
+        if (!atmoPaused) {   // Restart music if it played before
+            audioAtmo_.play();
+        }
+    }
+}
+
+function toggleMusic() {
+    atmoPaused = !atmoPaused;
+
+    if (!atmoPaused && !gamePaused) {
+        audioAtmo_.play();
+    } else {
+        audioAtmo_.pause();
+    }
+}
+
+function toggle(e) {
+    // Start routine, start by pressing any key
     if (gameStart) {
         gameStart = false;
         gamePaused = false;
+        atmoPaused = true;
 
         messageContainer.innerHTML = "";
-
-        // Play sound atmo
-        playSound(audioAtmo, loopAudio=true);
     }
 
     // Detect if key "p" pressed, toggle gamePaused
     else if (e.key === "p" || e.key === " ") {
-        gamePaused = !gamePaused;
+        pauseGame();
+    }
 
-        if (gamePaused) {
-            messageContainer.innerHTML = "Paused"; //\u258B\u258B";
-        } else {
-            messageContainer.innerHTML = "";
-        }
+    // Detect if key "m" pressed, toggle music
+    else if (e.key === "m") {
+        toggleMusic();
     }
 }
 
@@ -386,7 +414,7 @@ class PongBall {
 
 let pongContainer = document.getElementById("pongContainer");
 
-let keyDownFunctions = [gamePause];  // Functions to be executed upon keydown
+let keyDownFunctions = [toggle];  // Functions to be executed upon keydown
 let keyUpFunctions = [];  // Functions to be executed upon keyup
 
 document.onkeydown = function(e) {  // On keydown, execute all functions in list
@@ -443,10 +471,15 @@ pongContainer.appendChild(messageContainer);
 // Set up audio
 let audioHit = "media/hit_01.mp3";
 let audioScore = "media/explosion_00.mp3";
-let audioAtmo = "";
+let audioAtmo = "media/juhani_junkala_retro_game_music_pack/level1.wav"; //https://opengameart.org/content/5-chiptunes-action
+//let audioAtmo = "media/wtpk_retro_game.mp3"; //https://soundcloud.com/user-880303714-187515990/retro-game
 //let audioHit = "media/mixkit-drum-deep-impact-563.wav";
 //let audioScore = "media/mixkit-cinematic-trailer-apocalypse-horn-724.wav";
+//let audioScore = "media/inceptionbutton.mp3";
 //let audioAtmo = "media/mixkit-space-soundscape-653.mp3";
+let atmoPaused = true;
+let audioAtmo_ = playSound(audioAtmo, loopAudio=true, autoStart=!atmoPaused);
+audioAtmo_.volume = 0.7;
 
 // Start game loop
 let gamePaused = true;
